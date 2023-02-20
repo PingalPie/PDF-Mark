@@ -1,0 +1,59 @@
+@font-face {
+    font-family: "Kingthings Foundation";
+    src: url(../fonts/Kingthings-Foundation.ttf);
+}
+object{
+    width: 100%;
+}
+::selection {
+  text-shadow: 0 0 12px #e0c7eb;
+  color: #e0c7eb;
+}
+a {
+    color: #2f92ff;
+}
+a:visited {
+    color: #2f92ff;
+}
+body{
+    border: 1px solid white;
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
+}
+.bigabold{
+    font-size: 300%;
+}
+header{
+    padding: 10px;
+    font-family: "Kingthings Foundation";
+}
+header span{
+    color: rgb(255, 113, 255);
+}
+a:hover {
+    font-style: italic;
+    color: #31283C;
+}
+
+.center{
+    width: 100%;
+    text-align: center;
+}
+nav{
+    margin-bottom: 15px;
+}
+nav a{
+    font-size: 17px;
+    padding: 5px;
+    text-decoration: none;
+}
+@media (max-width:1600px)  {
+    body {
+        font-size: 90%;
+        padding: 1%;
+    }
+    aside {
+        display: none;
+    }
+}

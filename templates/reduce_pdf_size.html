@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block content %}
+
+<h1 class="center">Reduce Pdf Size</h1>
+<form action="/reduce_pdf_size" method="post" class="form center">
+    <label for="file">Select a file: </label>
+    <input type="file" id="file" required name="file"/><br><br>
+    
+    <input type="submit" placeholder="Submit">
+</form>
+
+{% if out_file %}
+    <!-- <button type="button" onclick="{{ out_file }}">Download Splitted pdf</button> -->
+    <!-- <a href="/static/pdfs/{{ out_file }}">Download Splitted pdf</a> -->
+    <object data="{{ out_file }}"></object>
+{% elif error %}
+    <p>Please report this  {{ error }}  error to <a href="https://github.com/pingalpie/pdf-manipulator">Issues</a> </p>
+{% endif %}
+
+
+{% endblock %}

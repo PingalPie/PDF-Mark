@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hey, this is PingalPie's homeplace">
+    <meta author="PingalPie">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>Welcome to PDF Manipulater</title>
+    {% endif %}
+    {% if out_file %}
+    <style>
+        .form{
+            display: none;
+        }
+    </style>
+    {% endif %}
+    <link href="/static/css/style.css" rel="stylesheet"/>
+    <link rel="icon" type="image/png" href="/images/favicon.ico">
+</head>
+<body>
+    <header class="center"><div class="bigabold">Welcome to <span>PDF Manipulater</span></div>
+        <nav class="center">
+            <a href="/">Home</a>|
+            <a href="/about">About</a>|
+            <a href="/contact">Contact</a>
+        </nav>
+    </header>
+    <hr>
+    <main>
+        {% block content %} {% endblock %}
+    </main>
+    <hr>
+    <div class="center">
+        <a href="https://pingalpie.tildevarsh.in"><img src="/static/images/pingalpie.jpg" alt="My website"></a>
+    </div>
+</body>
+</html>

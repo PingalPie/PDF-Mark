@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="title">
+	Welcome, web traveler
+</h1>
+<p>This maybe the website of your choice, here you can do multiple manipulations on pdf with out a cost, and for your kind information this website looks like this because it is minimal and if you want to copy it <a href="https://github.com/pingalpie/pdf-manipulator">here</a> is the source code for everything used in the website.</p>
+<br>
+<form action="/manipulations" class="center">
+<label for="option">Options: </label>
+<select name="option" id="option">
+    {% if options %}
+        {%- for option in options %}
+            <option value="{{ option -}}">{{ option -}}</option>
+        {% endfor %}
+    {% else %}
+        <h3>Unable to load options please report at <a href="https://github.com/pingalpie/pdf-manipulator/issues">here</a></h3>
+    {% endif %}
+</select><br>
+<input type="submit" value="Submit">
+</form> 
+
+
+{% endblock content %}

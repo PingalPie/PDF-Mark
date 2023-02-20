@@ -166,7 +166,7 @@ class window(tk.Tk):
                     for i in range(no_of_pdfs):
                         frame2 = tk.Frame(self)
 
-                        label_for_i = tk.Label(frame2, text=f'No. of pdfs: {i}')
+                        label_for_i = tk.Label(frame2, text=f'No. of pdfs: {i+1} ')
                         file_var = tk.StringVar()
                         file_var.set('')
 
