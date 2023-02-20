@@ -84,7 +84,7 @@ class window(tk.Tk):
                 input_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (input_path.set(self.funcs.select_file()), input_path_box.update()))
                 output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_file()), output_path_box.update()))
 
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (frame.pack_forget(), self.window()))
+                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
                 input_path_label.grid(column=1, row=1)
                 output_path_label.grid(column=1, row=2)
@@ -135,7 +135,7 @@ class window(tk.Tk):
                 output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_file()), output_path_box.update()))
 
                 submit_button = tk.Button(frame, text='Submit', command=lambda: reduce_file_size(input_path.get(), output_path.get()))
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (frame.pack_forget(), self.window()))
+                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
                 input_path_label.grid(column=1, row=1)
                 output_path_label.grid(column=1, row=2)
@@ -183,7 +183,7 @@ class window(tk.Tk):
                 output_path_label = tk.Label(frame, text='Output Path: ')
 
                 submit_button = tk.Button(frame, text='Submit', command=lambda: (frame.pack_forget(), merge_pdfs([file1.get(), file2.get()], output_path.get())))
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (frame.pack_forget(), self.window()))
+                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
                 file1_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (file1.set(self.funcs.select_file()), file1_box.update()))
                 file2_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (file2.set(self.funcs.select_file()), file2_box.update()))
