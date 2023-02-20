@@ -108,6 +108,3 @@ class functions:
         except Exception as e:
             return e
         
-if __name__=='__main__':
-    func =functions()
-    print(func.split_pdf('sql1-10.pdf', 'sql1-2.pdf', 1, 2))

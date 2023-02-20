@@ -135,7 +135,6 @@ class window(tk.Tk):
                 output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_file()), output_path_box.update()))
 
                 submit_button = tk.Button(frame, text='Submit', command=lambda: reduce_file_size(input_path.get(), output_path.get()))
-
                 back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (frame.pack_forget(), self.window()))
 
                 input_path_label.grid(column=1, row=1)
@@ -158,46 +157,52 @@ class window(tk.Tk):
                 title.pack()
                 frame = tk.Frame(self)
 
-                no_of_pdfs = tk.StringVar()
-                no_of_pdfs.set('')
+                file1 = tk.StringVar()
+                file1.set('')
+                file2 = tk.StringVar()
+                file2.set('')
+                output_path = tk.StringVar()
+                output_path.set('')
 
-                def ask_pdfs(no_of_pdfs):
-                    pdfs = []
-                    for i in range(no_of_pdfs):
-                        frame2 = tk.Frame(self)
+                def merge_pdfs(list_of_files, output_file):
+                    result = self.funcs.merge_pdfs(list_of_files, output_file)
+                    frame.pack_forget()
+                    frame2 = tk.Frame(self)
+                    label12 = tk.Label(frame2, text=result, font='sans-serif 15')
+                    label12.pack()
+                    back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
+                    back_to_home.pack()
+                    frame2.pack()
 
-                        label_for_i = tk.Label(frame2, text=f'No. of pdfs: {i+1} ')
-                        file_var = tk.StringVar()
-                        file_var.set('')
+                file1_box = tk.Entry(frame, textvariable=file1)
+                file2_box = tk.Entry(frame, textvariable=file2)
+                output_path_box = tk.Entry(frame, textvariable=output_path)
 
-                        file_box = tk.Entry(frame2, textvariable=file_var)
+                file1_label = tk.Label(frame, text='File 1: ')
+                file2_label = tk.Label(frame, text='File 2: ')
+                output_path_label = tk.Label(frame, text='Output Path: ')
 
-                        file_open_file = tk.Button(frame2, text='Open File', command=self.funcs.select_file)
+                submit_button = tk.Button(frame, text='Submit', command=lambda: (frame.pack_forget(), merge_pdfs([file1.get(), file2.get()], output_path.get())))
+                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (frame.pack_forget(), self.window()))
 
-                        submit_file = tk.Button(frame2, text='Submit', command=lambda: (pdfs.append(file_var.get(), frame2.pack_forget())))
+                file1_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (file1.set(self.funcs.select_file()), file1_box.update()))
+                file2_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (file2.set(self.funcs.select_file()), file2_box.update()))
+                output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_file()), output_path_box.update()))
 
-                        label_for_i.grid(column=1, row=1)
+                file1_label.grid(column=1, row=1)
+                file2_label.grid(column=1, row=2)
+                output_path_label.grid(column=1, row=3)
 
-                        file_box.grid(column=2, row=1)
+                file1_box.grid(column=2, row=1)
+                file2_box.grid(column=2, row=2)
+                output_path_box.grid(column=2, row=3)
 
-                        file_open_file.grid(column=3, row=1)
+                file1_path_icon_file.grid(column=3, row=1, padx=3, pady=2)
+                file2_path_icon_file.grid(column=3, row=2, padx=3, pady=2)
+                output_path_icon_file.grid(column=3, row=3, padx=3, pady=2)
 
-                        submit_file.grid(column=1, row=2)
-                        
-                        frame2.pack()
-
-
-                no_of_pdfs_box = tk.Entry(frame, textvariable=no_of_pdfs)
-
-                no_of_pdfs_label = tk.Label(frame, text='No. of pdf files: ')
-
-                submit_no_of_pdfs = tk.Button(frame, text='Submit no. of pdfs', command=lambda: (frame.pack_forget(), ask_pdfs(int(no_of_pdfs.get()))))
-        
-                no_of_pdfs_label.grid(column=1, row=1)
-                
-                no_of_pdfs_box.grid(column=2, row=1)
-
-                submit_no_of_pdfs.grid(column=1, row=2)
+                submit_button.grid(column=1, row=4)
+                back_to_homepage.grid(column=3, row=5, pady=10)
 
                 frame.pack()
 
