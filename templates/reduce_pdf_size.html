@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <h1 class="center">Reduce Pdf Size</h1>
-<form action="/reduce_pdf_size" method="post" class="form center">
+<form action="/reduce_pdf_size" method="post" enctype="multipart/form-data" class="form center">
     <label for="file">Select a file: </label>
     <input type="file" id="file" required name="file"/><br><br>
     

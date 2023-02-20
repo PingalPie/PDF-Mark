@@ -2,6 +2,9 @@ import pypdf
 import os
 from tkinter import filedialog as fd
 
+class incorrectNoPagesException:
+    "Enter correct no. of pages"
+
 class functions:
     def select_file(self):
         filetypes = (
@@ -38,10 +41,13 @@ class functions:
             if not os.path.exists(input_file):
                 raise FileNotFoundError
 
+
             with open(input_file, "rb") as input_file:
                 pdf_reader = pypdf.PdfReader(input_file)
                 pdf_writer = pypdf.PdfWriter()
 
+                if len(pdf_reader.pages)<start_page or len(pdf_reader.pages)<end_page:
+                    raise incorrectNoPagesException
                 for page_num in range(start_page - 1, end_page):
                     pdf_writer.add_page(pdf_reader.pages[page_num])
 

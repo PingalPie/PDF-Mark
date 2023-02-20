@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <h1 class="center">Merge Pdf</h1>
-<form action="/merge_pdfs" method="post" class="form center">
+<form action="/merge_pdfs" method="post" enctype="multipart/form-data" class="form center">
     <label for="file">Select first file: </label>
     <input type="file" id="file1" required name="file1"/><br><br>
     

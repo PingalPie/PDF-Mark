@@ -1,7 +1,7 @@
 {% extends "base.html" %} {% block content %}
 
 <h1>Split Pdf</h1>
-<form action="/split_pdf" method="post" class="form">
+<form action="/split_pdf" method="post" enctype="multipart/form-data" class="form">
     <label for="file">Select a file: </label>
     <input type="file" id="file" required name="file"/><br><br>
     

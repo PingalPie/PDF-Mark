@@ -24,7 +24,7 @@ body{
 .bigabold{
     font-size: 300%;
 }
-header{
+.bigabold{
     padding: 10px;
     font-family: "Kingthings Foundation";
 }
@@ -45,7 +45,7 @@ nav{
 }
 nav a{
     font-size: 17px;
-    padding: 5px;
+    padding: 14px;
     text-decoration: none;
 }
 @media (max-width:1600px)  {
