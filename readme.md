@@ -40,6 +40,8 @@ There is nothing in there.
 Every function to manipulate pdfs lives there. 
 ## gui.py
 That is the gui implementation.
+## cli.py
+That is the cli implementation.
 ## web.py
 That is the web implementation.
 ## templates - Folder
