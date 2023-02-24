@@ -26,6 +26,13 @@ python3 web.py
 ```
 After running the web.py go to localhost:5000 in your browser.
 
+## CLI application
+This is just the cli implementation of the functions which are in pdf.py
+
+```bash
+python3 cli.py
+```
+
 # Files/Folders
 ## main.py
 There is nothing in there.
