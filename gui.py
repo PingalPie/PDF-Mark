@@ -1,297 +1,370 @@
 import tkinter as tk
-from pdf import *
+from pdf import functions
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 
 class window(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.geometry('462x336')
-        self.title('Pdf Manipulator')
-        self.funcs = functions()
+	def __init__(self):
+		super().__init__()
+		self.geometry('462x300')
+		self.title('Pdf Manipulator')
+		self.funcs = functions()
 
-    def window(self):
-        """
-        
-        """
-        self.frame1 = tk.Frame(self)
-        labelf = tk.Label(self.frame1, text='Options: ')
-        option = tk.StringVar()
-        option.set("Choose one option")
-        options = []
+	def window(self):
+		"""
 
-        def select_answers():
-            if option.get() == "Choose one option":
-                return
-            self.options(option.get())
-            return
+		"""
+		self.frame1 = tk.Frame(self)
+		labelf = tk.Label(self.frame1, text='Options: ')
+		option = tk.StringVar()
+		option.set("Choose one option")
+		options_all = self.funcs.__all__
+		options = []
 
-        for function in dir(functions):
-            if not function.startswith('__') and not function=='select_file_pdf' and not function=='select_file_image' and not function=='select_output_file_pdf':
-                options.append(function)
+		def select_answers():
+			if option.get()!= "Choose one option":
+				return self.options(option.get())
+			return
 
-        option_menu = tk.OptionMenu(self.frame1, option, *options)
-            
-        submit = tk.Button(self.frame1, text="Submit", command=select_answers)
+		for i in options_all:
+			options.append(i.replace('_', ' '))
 
-        labelf.grid(column=1, row=1)
-        option_menu.grid(column=2, row=1)
-        submit.grid(column=1, row=2)
-        self.frame1.pack()
+		option_menu = tk.OptionMenu(self.frame1, option, *options)
 
-    def options(self, selected_option):
-        """
-        
-        """
-        self.frame1.pack_forget()
-        match selected_option:
-            case 'split_pdf':
-                # Creating required labels and frames
-                title = tk.Label(self, text='Split Pdf', font='monospace 20')
-                title.pack()
-                frame = tk.Frame(self)
-                
-                # Creating variables for entryboxes
-                input_path = tk.StringVar()
-                input_path.set('')
-                output_path = tk.StringVar()
-                output_path.set('')
-                start_page = tk.StringVar()
-                start_page.set('')
-                end_page = tk.StringVar()
-                end_page.set('')
+		submit = tk.Button(self.frame1, text="Submit", command=select_answers)
 
-                # Actual function which will do the task
-                def split_pdfs(input_path, output_path, start_page, end_page):                    
-                    result = self.funcs.split_pdf(str(input_path), str(output_path), int(start_page), int(end_page))
-                    frame.pack_forget()
-                    frame2 = tk.Frame(self)
-                    label12 = tk.Label(frame2, text=result)
-                    label12.pack()
-                    back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
-                    back_to_home.pack()
-                    frame2.pack()
+		labelf.grid(column=1, row=1)
+		option_menu.grid(column=2, row=1)
+		submit.grid(column=1, row=2)
+		self.frame1.pack()
 
-                # Creating entry boxes
-                input_path_box = tk.Entry(frame, textvariable=input_path)
-                output_path_box = tk.Entry(frame, textvariable=output_path)
-                start_page_box = tk.Entry(frame, textvariable=start_page)
-                end_page_box = tk.Entry(frame, textvariable=end_page)
+	def options(self, selected_option: str):
+		"""
 
-                # Creating Labels for entry boxes
-                input_path_label = tk.Label(frame, text='Input Path: ')
-                output_path_label = tk.Label(frame, text='Output Path: ')
-                start_page_label = tk.Label(frame, text='Start Page: ')
-                end_page_label = tk.Label(frame, text='End Page: ')
+		"""
+		self.frame1.pack_forget()
+		selected_option = selected_option.replace(' ', '_')
+		match selected_option:
+			case 'split_pdf':
+				# Creating required labels and frames
+				title = tk.Label(self, text='Split Pdf', font='monospace 20')
+				title.pack()
+				frame = tk.Frame(self)
 
-                # Creating required buttons
-                input_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (input_path.set(self.funcs.select_file_pdf()), input_path_box.update()))
-                output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_output_file_pdf()), output_path_box.update()))
-                submit_button = tk.Button(frame, text='Submit', command=lambda: split_pdfs(input_path=input_path.get(), output_path=output_path.get(), start_page=start_page.get(), end_page=end_page.get()))
+				# Creating variables for entryboxes
+				input_path = tk.StringVar()
+				input_path.set('')
+				output_path = tk.StringVar()
+				output_path.set('')
+				start_page = tk.StringVar()
+				start_page.set('')
+				end_page = tk.StringVar()
+				end_page.set('')
 
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+				# Actual function which will do the task
+				def split_pdfs(input_path, output_path, start_page, end_page):
+					result = self.funcs.split_pdf(str(input_path), str(output_path), int(start_page), int(end_page))
+					frame.pack_forget()
+					frame2 = tk.Frame(self)
+					label12 = tk.Label(frame2, text=result)
+					label12.pack()
+					back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
+					back_to_home.pack()
+					frame2.pack()
 
-                # Packing everything
-                input_path_label.grid(column=1, row=1)
-                output_path_label.grid(column=1, row=2)
-                start_page_label.grid(column=1, row=3)
-                end_page_label.grid(column=1, row=4)
-                
-                input_path_icon_file.grid(column=3, row=1, padx=3, pady=2)
-                output_path_icon_file.grid(column=3, row=2, padx=3, pady=2)
+				# Creating entry boxes
+				input_path_box = tk.Entry(frame, textvariable=input_path)
+				output_path_box = tk.Entry(frame, textvariable=output_path)
+				start_page_box = tk.Entry(frame, textvariable=start_page)
+				end_page_box = tk.Entry(frame, textvariable=end_page)
 
-                input_path_box.grid(column=2, row=1)
-                output_path_box.grid(column=2, row=2)
-                start_page_box.grid(column=2, row=3, pady=2)
-                end_page_box.grid(column=2, row=4, pady=3)
+				# Creating Labels for entry boxes
+				input_path_label = tk.Label(frame, text='Input Path: ')
+				output_path_label = tk.Label(frame, text='Output Path: ')
+				start_page_label = tk.Label(frame, text='Start Page: ')
+				end_page_label = tk.Label(frame, text='End Page: ')
 
-                submit_button.grid(column=1, row=5)
+				# Creating required buttons
+				input_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (input_path.set(self.funcs.select_file_pdf()), input_path_box.update()))
+				output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_output_file_pdf()), output_path_box.update()))
+				submit_button = tk.Button(frame, text='Submit', command=lambda: split_pdfs(input_path=input_path.get(), output_path=output_path.get(), start_page=start_page.get(), end_page=end_page.get()))
 
-                back_to_homepage.grid(column=3, row=5, pady=10)
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
-                frame.pack()
-            
-            case 'reduce_pdf_size':
-                # Creating required labels and frames
-                title = tk.Label(self, text="Reduce file size of a pdf", font='Sans-Serif 20')
-                title.pack()
-                frame = tk.Frame(self)
+				# Packing everything
+				input_path_label.grid(column=1, row=1)
+				output_path_label.grid(column=1, row=2)
+				start_page_label.grid(column=1, row=3)
+				end_page_label.grid(column=1, row=4)
 
-                # Creating variables for entryboxes
-                input_path = tk.StringVar()
-                input_path.set('')
-                output_path = tk.StringVar()
-                output_path.set('')
+				input_path_icon_file.grid(column=3, row=1, padx=3, pady=2)
+				output_path_icon_file.grid(column=3, row=2, padx=3, pady=2)
 
-                # Actual function which will do the task
-                def reduce_file_size(file, out_file):
-                    result = self.funcs.reduce_pdf_size(file, out_file)
-                    frame.pack_forget()
-                    frame2 = tk.Frame(self)
-                    label12 = tk.Label(frame2, text=result, font='sans-serif 15')
-                    label12.pack()
-                    back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
-                    back_to_home.pack()
-                    frame2.pack()
+				input_path_box.grid(column=2, row=1)
+				output_path_box.grid(column=2, row=2)
+				start_page_box.grid(column=2, row=3, pady=2)
+				end_page_box.grid(column=2, row=4, pady=3)
 
-                # Creating entry boxes
-                input_path_box = tk.Entry(frame, textvariable=input_path)
-                output_path_box = tk.Entry(frame, textvariable=output_path)
+				submit_button.grid(column=1, row=5)
 
-                # Creating Labels for entry boxes
-                input_path_label = tk.Label(frame, text='Input Path: ')
-                output_path_label = tk.Label(frame, text='Output Path: ')
+				back_to_homepage.grid(column=3, row=5, pady=10)
 
-                # Creating required buttons
-                input_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (input_path.set(self.funcs.select_file_pdf()), input_path_box.update()))
-                output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_output_file_pdf()), output_path_box.update()))
-                submit_button = tk.Button(frame, text='Submit', command=lambda: reduce_file_size(input_path.get(), output_path.get()))
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+				frame.pack()
 
-                # Packing everything
-                input_path_label.grid(column=1, row=1)
-                output_path_label.grid(column=1, row=2)
+			case 'reduce_pdf_size':
+				# Creating required labels and frames
+				title = tk.Label(self, text="Reduce file size of a pdf", font='Sans-Serif 20')
+				title.pack()
+				frame = tk.Frame(self)
 
-                input_path_icon_file.grid(column=3, row=1, padx=3, pady=2)
-                output_path_icon_file.grid(column=3, row=2, padx=3, pady=2)
+				# Creating variables for entryboxes
+				input_path = tk.StringVar()
+				input_path.set('')
+				output_path = tk.StringVar()
+				output_path.set('')
 
-                input_path_box.grid(column=2, row=1)
-                output_path_box.grid(column=2, row=2)
+				# Actual function which will do the task
+				def reduce_file_size(file, out_file):
+					result = self.funcs.reduce_pdf_size(file, out_file)
+					frame.pack_forget()
+					frame2 = tk.Frame(self)
+					label12 = tk.Label(frame2, text=result, font='sans-serif 15')
+					label12.pack()
+					back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
+					back_to_home.pack()
+					frame2.pack()
 
-                submit_button.grid(column=1, row=5)
+				# Creating entry boxes
+				input_path_box = tk.Entry(frame, textvariable=input_path)
+				output_path_box = tk.Entry(frame, textvariable=output_path)
 
-                back_to_homepage.grid(column=3, row=5, pady=10)
+				# Creating Labels for entry boxes
+				input_path_label = tk.Label(frame, text='Input Path: ')
+				output_path_label = tk.Label(frame, text='Output Path: ')
 
-                frame.pack()
-            
-            case 'merge_pdfs':
-                # Creating required labels and frames
-                title = tk.Label(self, text="Merge Pdfs", font='Sans-Serif 20')
-                instructions = tk.Label(self, text='Have values in the entry box of list of files comma seperated', relief=tk.SUNKEN, anchor='s')
-                frame = tk.Frame(self)
+				# Creating required buttons
+				input_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (input_path.set(self.funcs.select_file_pdf()), input_path_box.update()))
+				output_path_icon_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_output_file_pdf()), output_path_box.update()))
+				submit_button = tk.Button(frame, text='Submit', command=lambda: reduce_file_size(input_path.get(), output_path.get()))
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
-                # Creating variables for entryboxes
-                files = tk.StringVar()
-                files.set('')
-                output_path = tk.StringVar()
-                output_path.set('')
+				# Packing everything
+				input_path_label.grid(column=1, row=1)
+				output_path_label.grid(column=1, row=2)
 
-                # Actual function which will do the task
-                def merge_pdfs(output_file):
-                    list_of_files = files.get().split(',')
-                    result = self.funcs.merge_pdfs(list_of_files, output_file)
-                    frame.pack_forget()
-                    frame2 = tk.Frame(self)
-                    label12 = tk.Label(frame2, text=result, font='sans-serif 15')
-                    label12.pack()
-                    back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (instructions.pack_forget(), title.pack_forget(), frame2.pack_forget(), self.window()))
-                    back_to_home.pack()
-                    frame2.pack()
+				input_path_icon_file.grid(column=3, row=1, padx=3, pady=2)
+				output_path_icon_file.grid(column=3, row=2, padx=3, pady=2)
 
-                # Creating entry boxes
-                files_box = tk.Entry(frame, textvariable=files)
-                output_path_box = tk.Entry(frame, textvariable=output_path)
+				input_path_box.grid(column=2, row=1)
+				output_path_box.grid(column=2, row=2)
 
-                # Creating Labels for entry boxes
-                files_label = tk.Label(frame, text='Files: ')
-                output_path_label = tk.Label(frame, text='Output Path: ')
+				submit_button.grid(column=1, row=5)
 
-                # Creating required buttons
-                submit_button = tk.Button(frame, text='Submit', command=lambda: (merge_pdfs(output_path.get())))
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (instructions.pack_forget(), title.pack_forget(), frame.pack_forget(), self.window()))
-                if files.get() == '':
-                    files_open_file = tk.Button(frame, text="Open File", command=lambda: (files.set(self.funcs.select_file_pdf()),files_box.update()))
-                files_open_file = tk.Button(frame, text="Open File", command=lambda: (files.set(files.get()+','+self.funcs.select_file_pdf()),files_box.update()))
-                output_open_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(output_path.get()+','+self.funcs.select_output_file_pdf()), output_path_box.update()))
+				back_to_homepage.grid(column=3, row=5, pady=10)
 
-                # Packing everything
-                files_label.grid(column=1, row=1)
-                output_path_label.grid(column=1, row=3)
+				frame.pack()
 
-                files_box.grid(column=2, row=1)
-                output_path_box.grid(column=2, row=3)
+			case 'merge_pdfs':
+				# Creating required labels and frames
+				title = tk.Label(self, text="Merge Pdfs", font='Sans-Serif 20')
+				instructions = tk.Label(self, text='Have values in the entry box of list of files comma seperated', relief=tk.SUNKEN, anchor='s')
+				frame = tk.Frame(self)
 
-                files_open_file.grid(column=3, row=1, padx=3, pady=2)
-                # file2_.grid(column=3, row=2, padx=3, pady=2)
-                output_open_file.grid(column=3, row=3, padx=3, pady=2)
+				# Creating variables for entryboxes
+				files = tk.StringVar()
+				files.set('')
+				output_path = tk.StringVar()
+				output_path.set('')
 
-                submit_button.grid(column=1, row=4)
-                back_to_homepage.grid(column=3, row=5, pady=10)
+				# Actual function which will do the task
+				def merge_pdfs(output_file):
+					list_of_files = files.get().split(',')
+					result = self.funcs.merge_pdfs(list_of_files, output_file)
+					frame.pack_forget()
+					frame2 = tk.Frame(self)
+					label12 = tk.Label(frame2, text=result, font='sans-serif 15')
+					label12.pack()
+					back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (instructions.pack_forget(), title.pack_forget(), frame2.pack_forget(), self.window()))
+					back_to_home.pack()
+					frame2.pack()
 
-                title.pack()
-                instructions.pack(side='bottom', fill=tk.X)
-                frame.pack()
+				# Creating entry boxes
+				files_box = tk.Entry(frame, textvariable=files)
+				output_path_box = tk.Entry(frame, textvariable=output_path)
 
-            case 'convert_images_to_pdf':
+				# Creating Labels for entry boxes
+				files_label = tk.Label(frame, text='Files: ')
+				output_path_label = tk.Label(frame, text='Output Path: ')
 
-                # Creating required labels and frames
-                title = tk.Label(self, text='convert_images_to_pdf', font='Sans-Serif 20')
-                list_of_files_instructions = tk.Label(self, text='Have values in the entry box of list of files comma seperated', relief=tk.SUNKEN, anchor='s')
-                frame = tk.Frame(self)
+				# Creating required buttons
+				submit_button = tk.Button(frame, text='Submit', command=lambda: (merge_pdfs(output_path.get())))
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (instructions.pack_forget(), title.pack_forget(), frame.pack_forget(), self.window()))
+				if files.get() == '':
+					files_open_file = tk.Button(frame, text="Open File", command=lambda: (files.set(self.funcs.select_file_pdf()),files_box.update()))
+				files_open_file = tk.Button(frame, text="Open File", command=lambda: (files.set(files.get()+','+self.funcs.select_file_pdf()),files_box.update()))
+				output_open_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(output_path.get()+','+self.funcs.select_output_file_pdf()), output_path_box.update()))
 
-                # Creating variables for entryboxes
-                list_of_file = tk.StringVar()
-                list_of_file.set('')
-                output_path = tk.StringVar()
-                output_path.set('')
+				# Packing everything
+				files_label.grid(column=1, row=1)
+				output_path_label.grid(column=1, row=3)
 
-                # Actual function which will do the task
-                def convert_images_to_pdf(list_of_images: list, output_pdf: str):
-                    list_of_files_instructions.pack_forget()
-                    frame.pack_forget()
-                    result = self.funcs.convert_images_to_pdf(list_of_images, output_pdf)
-                    lab = tk.Label(self, text=result)
-                    go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), self.window()))
-                    lab.pack()
-                    go_to_homepage.pack()
+				files_box.grid(column=2, row=1)
+				output_path_box.grid(column=2, row=3)
 
-                # Creating Labels for entry boxes
-                list_of_file_label = tk.Label(frame, text='List of files: ')
-                output_path_label = tk.Label(frame, text='Output filename: ')
+				files_open_file.grid(column=3, row=1, padx=3, pady=2)
+				# file2_.grid(column=3, row=2, padx=3, pady=2)
+				output_open_file.grid(column=3, row=3, padx=3, pady=2)
 
-                # Creating entry boxes
-                list_of_file_entry = tk.Entry(frame, textvariable=list_of_file)
-                output_path_entry = tk.Entry(frame, textvariable=output_path)
+				submit_button.grid(column=1, row=4)
+				back_to_homepage.grid(column=3, row=5, pady=10)
 
-                # Creating required buttons
-                if list_of_file.get() == '':
-                    list_of_files_open_file = tk.Button(frame, text="Open File", command=lambda: (list_of_file.set(self.funcs.select_file_image()),list_of_file_entry.update()))
-                list_of_files_open_file = tk.Button(frame, text="Open File", command=lambda: (list_of_file.set(list_of_file.get()+','+self.funcs.select_file_image()),list_of_file_entry.update()))
-                output_path_open_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_output_file_pdf()), output_path_box.update()))
-                submit_button = tk.Button(frame, text='Submit', command=lambda: (convert_images_to_pdf(list_of_file.get().split(',') ,output_path.get())))
-                back_to_homepage = tk.Button(frame, text='Back to homepage', command=lambda: (frame.pack_forget(), self.window()))
+				title.pack()
+				instructions.pack(side='bottom', fill=tk.X)
+				frame.pack()
 
-                # Packing everything
-                list_of_file_label.grid(column=1, row=1)
-                output_path_label.grid(column=1, row=2)
+			case 'convert_images_to_pdf':
 
-                list_of_file_entry.grid(column=2, row=1)
-                output_path_entry.grid(column=2, row=2)
+				# Creating required labels and frames
+				title = tk.Label(self, text='convert_images_to_pdf', font='Sans-Serif 20')
+				list_of_files_instructions = tk.Label(self, text='Have values in the entry box of list of files comma seperated', relief=tk.SUNKEN, anchor='s')
+				frame = tk.Frame(self)
 
-                list_of_files_open_file.grid(column=3, row=1, padx=3, pady=3)
-                output_path_open_file.grid(column=3, row=2, padx=3)
+				# Creating variables for entryboxes
+				list_of_file = tk.StringVar()
+				list_of_file.set('')
+				output_path = tk.StringVar()
+				output_path.set('')
 
-                submit_button.grid(column=1, row=3)
-                back_to_homepage.grid(column=3, row=5)
+				# Actual function which will do the task
+				def convert_images_to_pdf(list_of_images: list, output_pdf: str):
+					list_of_files_instructions.pack_forget()
+					frame.pack_forget()
+					result = self.funcs.convert_images_to_pdf(list_of_images, output_pdf)
+					lab = tk.Label(self, text=result)
+					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), self.window()))
+					lab.pack()
+					go_to_homepage.pack()
 
-                title.pack()
+				# Creating Labels for entry boxes
+				list_of_file_label = tk.Label(frame, text='List of files: ')
+				output_path_label = tk.Label(frame, text='Output filename: ')
 
-                frame.pack()
+				# Creating entry boxes
+				list_of_file_entry = tk.Entry(frame, textvariable=list_of_file)
+				output_path_entry = tk.Entry(frame, textvariable=output_path)
 
-                list_of_files_instructions.pack(side='bottom', fill=tk.X)
+				# Creating required buttons
+				if list_of_file.get() == '':
+					list_of_files_open_file = tk.Button(frame, text="Open File", command=lambda: (list_of_file.set(self.funcs.select_file_image()),list_of_file_entry.update()))
+				list_of_files_open_file = tk.Button(frame, text="Open File", command=lambda: (list_of_file.set(list_of_file.get()+','+self.funcs.select_file_image()),list_of_file_entry.update()))
+				output_path_open_file = tk.Button(frame, text="Open File", command=lambda: (output_path.set(self.funcs.select_output_file_pdf()), output_path_box.update()))
+				submit_button = tk.Button(frame, text='Submit', command=lambda: (convert_images_to_pdf(list_of_file.get().split(',') ,output_path.get())))
+				back_to_homepage = tk.Button(frame, text='Back to homepage', command=lambda: (frame.pack_forget(), self.window()))
 
-            case _:
-                title = tk.Label(self, text='Choose correct option.')
-                frame = tk.Frame(self)
-                
-                back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+				# Packing everything
+				list_of_file_label.grid(column=1, row=1)
+				output_path_label.grid(column=1, row=2)
 
-                back_to_homepage.pack()
-                frame.pack()
-                title.pack()
+				list_of_file_entry.grid(column=2, row=1)
+				output_path_entry.grid(column=2, row=2)
+
+				list_of_files_open_file.grid(column=3, row=1, padx=3, pady=3)
+				output_path_open_file.grid(column=3, row=2, padx=3)
+
+				submit_button.grid(column=1, row=3)
+				back_to_homepage.grid(column=3, row=5)
+
+				title.pack()
+
+				frame.pack()
+
+				list_of_files_instructions.pack(side='bottom', fill=tk.X)
+
+			case 'watermark':
+			    # Changing geometry
+				self.geometry('650x300')
+				# Creating frame and title
+				title = tk.Label(self, text="Watermark")
+				indicies_instructions = tk.Label(self, text="Page numbers should be written in comma seperated values, default: all")
+				frame = tk.Frame(self)
+
+				# Creating variables
+				content_pdf = tk.StringVar()
+				watermark_file = tk.StringVar()
+				output_pdf = tk.StringVar()
+				page_indicies = tk.StringVar()
+				page_indicies.set('ALL')
+				watermark_file.set('')
+				content_pdf.set('')
+
+				# Function which works on pressing submit button
+				def watermark():
+					frame.pack_forget()
+					indicies.pack_forget()
+					result = self.funcs.watermark(watermark_file.get(), content_pdf.get(), output_pdf.get(), page_indices.get().split(','))
+					lab = tk.Label(self, text=result)
+					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), self.window()))
+
+					lab.pack()
+					go_to_homepage.pack()
+
+				# Making Entry boxes
+				output_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
+				content_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
+				watermark_entry = tk.Entry(frame, textvariable=watermark_file)
+				page_indices_entry = tk.Entry(frame, textvariable=page_indicies)
+				
+				# Making Labels
+				output_pdf_label = tk.Label(frame, text="Output file:")
+				content_pdf_label = tk.Label(frame, text='Main pdf:')
+				watermark_label = tk.Label(frame, text="Watermark file:")
+				page_indicies_label = tk.Label(frame, text="Page numbers on which stamp to be applied: ")
+
+				# Making buttons
+				output_pdf_open = tk.Button(frame, text='Open File', command=lambda: (output_pdf.set(self.funcs.select_file_pdf()), ))
+				content_pdf_open = tk.Button(frame, text='Open File', command=lambda: (output_pdf.set(self.funcs.select_file_pdf()), ))
+
+				watermark_open = tk.Button(frame, text="Open File", command=lambda: (watermark_file.set(self.funcs.select_output_file_image()), watermark_entry.update()))
+				submit = tk.Button(frame, text="Submit", command=lambda: ())
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+
+				# Packing Everything
+				content_pdf_label.grid(column=1, row=1)
+				watermark_label.grid(column=1, row=2)
+				output_pdf_label.grid(column=1, row=3)
+				page_indicies_label.grid(column=1, row=4)
+
+				content_pdf_entry.grid(column=2, row=1)
+				watermark_entry.grid(column=2, row=2)
+				output_pdf_entry.grid(column=2, row=3)
+				page_indices_entry.grid(column=2, row=4)
+
+				content_pdf_open.grid(column=3, row=1, padx=3, pady=1)
+				watermark_open.grid(column=3, row=2, padx=3, pady=1)
+				output_pdf_open.grid(column=3, row=3, padx=3, pady=1)
+	
+				submit.grid(column=1, row=5)
+				back_to_homepage.grid(column=3, row=5)
+
+			
+				title.pack()
+				indicies_instructions.pack(side='bottom', fill=tk.X)
+				frame.pack()
+
+			
+				
+			case _:
+				title = tk.Label(self, text='Choose correct option.')
+				frame = tk.Frame(self)
+
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+
+				back_to_homepage.pack()
+				frame.pack()
+				title.pack()
 
 
 if __name__=='__main__':
-    gui = window()
-    gui.window()
-    gui.mainloop()
+	gui = window()
+	gui.window()
+	gui.mainloop()
