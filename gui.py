@@ -284,7 +284,7 @@ class window(tk.Tk):
 			    # Changing geometry
 				self.geometry('650x300')
 				# Creating frame and title
-				title = tk.Label(self, text="Watermark")
+				title = tk.Label(self, text="Watermark", font='sans-serif 20')
 				indicies_instructions = tk.Label(self, text="Page numbers should be written in comma seperated values, default: all")
 				frame = tk.Frame(self)
 
@@ -300,16 +300,17 @@ class window(tk.Tk):
 				# Function which works on pressing submit button
 				def watermark():
 					frame.pack_forget()
-					indicies.pack_forget()
-					result = self.funcs.watermark(watermark_file.get(), content_pdf.get(), output_pdf.get(), page_indices.get().split(','))
+					indicies_instructions.pack_forget()
+					result = self.funcs.watermark(watermark_file.get(), content_pdf.get(), output_pdf.get(), page_indicies.get().split(','))
+					print(result)
 					lab = tk.Label(self, text=result)
-					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), self.window()))
+					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), go_to_homepage.pack_forget(), self.window()))
 
 					lab.pack()
 					go_to_homepage.pack()
 
 				# Making Entry boxes
-				output_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
+				output_pdf_entry = tk.Entry(frame, textvariable=output_pdf)
 				content_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
 				watermark_entry = tk.Entry(frame, textvariable=watermark_file)
 				page_indices_entry = tk.Entry(frame, textvariable=page_indicies)
@@ -318,14 +319,14 @@ class window(tk.Tk):
 				output_pdf_label = tk.Label(frame, text="Output file:")
 				content_pdf_label = tk.Label(frame, text='Main pdf:')
 				watermark_label = tk.Label(frame, text="Watermark file:")
-				page_indicies_label = tk.Label(frame, text="Page numbers on which stamp to be applied: ")
+				page_indicies_label = tk.Label(frame, text="Page numbers on which watermark to be applied: ")
 
 				# Making buttons
 				output_pdf_open = tk.Button(frame, text='Open File', command=lambda: (output_pdf.set(self.funcs.select_file_pdf()), ))
 				content_pdf_open = tk.Button(frame, text='Open File', command=lambda: (output_pdf.set(self.funcs.select_file_pdf()), ))
 
 				watermark_open = tk.Button(frame, text="Open File", command=lambda: (watermark_file.set(self.funcs.select_output_file_image()), watermark_entry.update()))
-				submit = tk.Button(frame, text="Submit", command=lambda: ())
+				submit = tk.Button(frame, text="Submit", command=lambda: (frame.pack_forget(), watermark()))
 				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
 				# Packing Everything
@@ -351,7 +352,77 @@ class window(tk.Tk):
 				indicies_instructions.pack(side='bottom', fill=tk.X)
 				frame.pack()
 
+			case "stamp":
+			    # Changing geometry
+				self.geometry('650x300')
+				# Creating frame and title
+				title = tk.Label(self, text="Stamp", font='sans-serif 20')
+				indicies_instructions = tk.Label(self, text="Page numbers should be written in comma seperated values, default: all")
+				frame = tk.Frame(self)
+
+				# Creating variables
+				content_pdf = tk.StringVar()
+				stamp_file = tk.StringVar()
+				output_pdf = tk.StringVar()
+				page_indicies = tk.StringVar()
+				page_indicies.set('ALL')
+				stamp_file.set('')
+				content_pdf.set('')
+
+				# Function which works on pressing submit button
+				def stamp():
+					frame.pack_forget()
+					indicies_instructions.pack_forget()
+					result = self.funcs.stamp(stamp_file.get(), content_pdf.get(), output_pdf.get(), page_indicies.get().split(','))
+					lab = tk.Label(self, text=result)
+					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), go_to_homepage.pack_forget(), self.window()))
+
+					lab.pack()
+					go_to_homepage.pack()
+
+				# Making Entry boxes
+				output_pdf_entry = tk.Entry(frame, textvariable=output_pdf)
+				content_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
+				stamp_entry = tk.Entry(frame, textvariable=stamp_file)
+				page_indices_entry = tk.Entry(frame, textvariable=page_indicies)
+				
+				# Making Labels
+				output_pdf_label = tk.Label(frame, text="Output file:")
+				content_pdf_label = tk.Label(frame, text='Main pdf:')
+				stamp_label = tk.Label(frame, text="Stamp file:")
+				page_indicies_label = tk.Label(frame, text="Page numbers on which stamp to be applied: ")
+
+				# Making buttons
+				output_pdf_open = tk.Button(frame, text='Open File', command=lambda: (output_pdf.set(self.funcs.select_file_pdf()), ))
+				content_pdf_open = tk.Button(frame, text='Open File', command=lambda: (output_pdf.set(self.funcs.select_file_pdf()), ))
+
+				stamp_open = tk.Button(frame, text="Open File", command=lambda: (stamp_file.set(self.funcs.select_output_file_image()), watermark_entry.update()))
+				submit = tk.Button(frame, text="Submit", command=lambda: (frame.pack_forget(), stamp()))
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+
+				# Packing Everything
+				content_pdf_label.grid(column=1, row=1)
+				stamp_label.grid(column=1, row=2)
+				output_pdf_label.grid(column=1, row=3)
+				page_indicies_label.grid(column=1, row=4)
+
+				content_pdf_entry.grid(column=2, row=1)
+				stamp_entry.grid(column=2, row=2)
+				output_pdf_entry.grid(column=2, row=3)
+				page_indices_entry.grid(column=2, row=4)
+
+				content_pdf_open.grid(column=3, row=1, padx=3, pady=1)
+				stamp_open.grid(column=3, row=2, padx=3, pady=1)
+				output_pdf_open.grid(column=3, row=3, padx=3, pady=1)
+	
+				submit.grid(column=1, row=5)
+				back_to_homepage.grid(column=3, row=5)
+
 			
+				title.pack()
+				indicies_instructions.pack(side='bottom', fill=tk.X)
+				frame.pack()
+
 				
 			case _:
 				title = tk.Label(self, text='Choose correct option.')

@@ -12,19 +12,19 @@ class functions:
 	def __init__(self):
 		super().__init__()
 		self.__all__ = ['split_pdf', 'merge_pdfs', 'reduce_pdf_size', 'stamp', 'watermark', 'convert_images_to_pdf']
-	
+
 	def select_file_pdf(self):
 		filetypes = (
-		('PDF files', '*.pdf'),
+		('PDF files', '*.pdf,*.PDF'),
 		('All files', '*.*')
 		)
 		file = fd.askopenfilename(
 			title='Path of the pdf',
 			initialdir='.',
 			filetypes=filetypes)
-		
+
 		return file
-	
+
 	def select_output_file_pdf(self):
 		filetypes = (
 		('PDF files', '*.pdf,*.PDF'),
@@ -34,9 +34,9 @@ class functions:
 			title='Path of the output pdf',
 			initialdir='.',
 			filetypes=filetypes)
-		
+
 		return file
-	
+
 	def select_file_image(self):
 		filetypes = (
 		('Image files', '*.jpg,*.png,*.bmp,*.jpeg'),
@@ -46,7 +46,7 @@ class functions:
 			title='Path of the pdf',
 			initialdir='.',
 			filetypes=filetypes)
-		
+
 		return file
 
 	def split_pdf(self, input_file: Path, output_file: Path, start_page: int =1, end_page: int=1):
@@ -87,7 +87,7 @@ class functions:
 			file (Path): The path of the input file
 			reduced_file_name (Path): The path of the output file
 		"""
-		
+
 		try:
 			if not os.path.exists(file):
 				raise FileNotFoundError
@@ -103,7 +103,7 @@ class functions:
 
 			with open(reduced_file_name, "wb") as f:
 				writer.write(f)
-			
+
 			return "Success"
 		except Exception as e:
 			return e
@@ -114,17 +114,17 @@ class functions:
 
 		Args:
 			list_of_files (list): The list of files
-			output_file (Path): The path of the output file 
+			output_file (Path): The path of the output file
 		"""
 		try:
 			if not isinstance(list_of_files, list):
 				raise TypeError
-			
+
 			writer = pypdf.PdfWriter()
-			
+
 			for pdf in list_of_files:
 				writer.append(pdf)
-			
+
 			writer.write(output_file)
 			writer.close()
 
@@ -161,70 +161,56 @@ class functions:
 		except Exception as e:
 			return e
 
-	def stamp_pdf(self, stamp: Path, input_file: Path, output_file: Path): # Not ready yet
-			"""
+	def stamp(self, stamp: Path, input_file: Path, output_file: Path, pages: Union[Literal["ALL"], List[int]] = "ALL"):
+		"""
 		Stamp the pdf given in the input_file
 
 		Args:
-			stamp (Path): The path of the stamp image
+			stamp (Path): The path of the stamp pdf.
 			input_file (Path): The path of the file which needs to be stamped
 			output_file (Path): The path of the file to which stamped file will be stored
+			pages (list or string): Pages to be stamped.
 		"""
 
-		# try:
-			
-		#	 if not os.path.exists(stamp):
-		#		 raise FileNotFoundError
-		#	 if not os.path.exists(input_file):
-		#		 raise FileNotFoundError
-
-		#	 reader = pypdf.PdfReader(input_file)
-		#	 writer = pypdf.PdfWriter()
-
-		#	 page_indices = list(range(0, len(reader.pages)))
-		#	 print(page_indices)
-
-		#	 for index in page_indices:
-		#		 content_of_page = reader.pages[index]
-		#		 mediabox = content_of_page.mediabox
-		#		 content_of_page.merge_page(stamp)
-		#		 content_of_page.mediabox = mediabox
-		#		 writer.add_page(content_of_page)
-
-		#	 with open(output_file, 'wb') as f:
-		#		 writer.write(f)
-
-		# except Exception as e:
-		#	 print(e)
+		try:
 			if not os.path.exists(stamp):
 				raise FileNotFoundError
 			if not os.path.exists(input_file):
 				raise FileNotFoundError
 
-			reader = pypdf.PdfReader(input_file)
+			stamp_page = pypdf.PdfReader(stamp).pages[0]
+
 			writer = pypdf.PdfWriter()
 
-			page_indices = list(range(0, len(reader.pages)))
-			print(page_indices)
+			reader = pypdf.PdfReader(input_file)
+			if pages == ['ALL']:
+				pages = list(range(0, len(reader.pages)))
+			elif pages == 'ALL':
+				pages = list(range(0, len(reader.pages)))
 
-			for index in page_indices:
-				content_page = reader.pages[index]
+			for page in pages:
+				content_page = reader.pages[page]
 				mediabox = content_page.mediabox
-				# content_page.merge_page(stamp)
+				content_page.merge_page(stamp_page)
 				content_page.mediabox = mediabox
 				writer.add_page(content_page)
+
 			with open(output_file, 'wb') as f:
 				writer.write(f)
+			return "Success"
 
-	def watermark(self, watermark: Path, input_file: Path, output_file: Path, page_indices: Union[Literal["ALL"], List[int]] = "ALL"):
+		except Exception as e:
+			return e
+
+	def watermark(self, watermark: Path, input_file: Path, output_file: Path, page_indicies: Union[Literal["ALL"], List[int]] = "ALL"):
 		"""
 		Watermark the file in the argument input_file
 
-		Args: 
+		Args:
 			watermark (Path): Path of the image file that is going to be used as watermark.
 			input_file (Path): Path of the input file that is going to have the watermark.
-		    page_indices (list): list of pages on which watermark is to be applied.
-			output_file (Path): Path of the pdf where the pdf will stored.  
+			page_indices (list): list of pages on which watermark is to be applied.
+			output_file (Path): Path of the pdf where the pdf will stored.
 		"""
 		try:
 			if not os.path.exists(watermark):
@@ -233,21 +219,23 @@ class functions:
 				raise FileNotFoundError
 
 			reader = pypdf.PdfReader(input_file)
-			if page_indices == 'ALL':
-				page_indices = range(len(reader.pages))
-			
+			if page_indicies == ['ALL']:
+				page_indicies = list(range(len(reader.pages)))
+			elif page_indicies == 'ALL':
+				page_indicies = list(range(len(reader.pages)))
+
 			writer = pypdf.PdfWriter()
 			if watermark.split('.')[-1] == 'pdf':
 				watermark_page = pypdf.PdfReader(watermark).pages[0]
 			else:
 				self.convert_images_to_pdf([watermark], watermark + '.pdf')
 				watermark_page = pypdf.PdfReader(watermark+'.pdf').pages[0]
-				
-			for index in page_indices:
+
+			for index in page_indicies:
 				content_page = reader.pages[index]
 				content_page.merge_transformed_page(watermark_page, pypdf.Transformation(), over=False)
 				writer.add_page(content_page)
-				
+
 			with open(output_file, "wb") as f:
 				writer.write(f)
 			return "Success"
@@ -255,6 +243,6 @@ class functions:
 		except Exception as e:
 			return e
 
+
 if __name__=='__main__':
 	funcs = functions()
-	print(funcs.watermark('twst.pdf', 'mamu.pdf', 'test2_watermark.pdf'))
