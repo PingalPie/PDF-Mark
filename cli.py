@@ -1,58 +1,83 @@
-import argparse
-from pdf import functions
-import sys
+#!/bin/env python
+
+import click
+from pdf import *
 
 funcs = functions()
 
-option = sys.argv
-
-parser = argparse.ArgumentParser()
-
-if len(option)<2:
-    print('Enter correct information')
-    print(f"Usage: {option[0]} ['split', 'reduce_size', 'merge_pdfs', 'convert_images'] (option related to the option selected) ")
-    exit(1)
-
-match option[1]:
-    case 'split_pdf':
-        parser.add_argument('Option', help='Manipulator option to use on the given pdf')
-        parser.add_argument('input_file', help='Input path of the file')
-        parser.add_argument('output_file', help='Path to the file where to save the splitted pdf')
-        parser.add_argument('start_page', help='Starting page for the input pdf', type=int)
-        parser.add_argument('end_page', help='Ending page for the output pdf', type=int)
-    
-    case 'reduce_size':
-        parser.add_argument('Option', help='Manipulator option to use on the given pdf')
-        parser.add_argument('input_file', help='Input path of the file')
-        parser.add_argument('output_file', help='Path to the file where to save the splitted pdf')
-    
-    case 'merge_pdfs':
-        parser.add_argument('Option', help='Manipulator option to use on the given pdf')
-        parser.add_argument('output_file', help='Path to the file where to save the splitted pdf')
-        parser.add_argument('list_of_files', nargs='+', help='All the filenames that needed to be combined')
-    
-    case 'convert_images':
-        parser.add_argument('Option', help='Manipulator option to use on the given pdf')
-        parser.add_argument('output_file', help='Path to the file where to save the combined pdf')
-        parser.add_argument('list_of_files', nargs='+', help='All the filenames that needed to be combined')
-        
-    case _:
-        print(option)
-        print('Error')
+@click.command()
+@click.option('--option', help="Which manipulation you want to do")
+@click.option('-i', default=False, is_flag=True)
+@click.option('--input-file', 'input_file', default="None")
+@click.option('--output-file', 'output_file', default="None")
+@click.option('--pages', default="ALL")
+@click.option('--start-page', 'start_page', default=1)
+@click.option('--end-page', 'end_page', default=1)
+@click.option('--stamp-file', 'stamp_file', default="None")
+@click.option('--watermark-file', 'watermark_file', default="None")
+def main(option, i, input_file, output_file, pages, start_page, end_page, stamp_file, watermark_file):
+    if option not in funcs.__all__:
+        print("Choose correct option from '", end="")
+        for f in funcs.__all__:
+            print(f, end=", ")
+        print("'")
         exit(1)
 
-args = parser.parse_args()
+    if i:
+        output_file = input('Output File: ')
+        if option == 'split_pdf':
+            input_file = input('Input File: ')
+            start_page = input('Start Page (default: 1): ')
+            end_page = input('End Page: (default: 1) ')
+            try:
+                start_page = int(start_page)
+                end_page = int(end_page)
+            except Exception as e:
+                start_page = end_page = 1
+            print(funcs.split_pdf(input_file, output_file, start_page, end_page))
+        elif option == 'merge_pdfs':
+            pdfs = input('Pdfs to be merged (space seperated): ').split(' ')
+            print(funcs.merge_pdfs(pdfs, output_pdf))
 
-match args.Option:
-    case 'split_pdf':
-        result = funcs.split_pdf(args.input_file, args.output_file, args.start_page, args.end_page)
-        print(result)
-    
-    case 'reduce_size':
-        print(funcs.reduce_pdf_size(args.input_file, args.output_file))
+        elif option == 'reduce_pdf_size':
+            input_file = input('Input File: ')
+            print(funcs.reduce_pdf_size(input_file, output_file))
+        elif option == 'stamp':
+            input_file = input('Main File: ')
+            stamp_file = input('Stamp File (pdf): ')
+            pages = input('Pages on which stamp to be applied (default: ALL): ')
+            pages = pages.split(',')
+            print(funcs.stamp(stamp_file, input_file, output_file, pages))
 
-    case 'merge_pdfs':
-        print(funcs.merge_pdfs(output_file=args.output_file, list_of_files=args.list_of_files))
-    
-    case 'convert_images':
-        print(funcs.convert_images_to_pdf(output_path=args.output_file, list_of_images=args.list_of_files))
+        elif option == 'watermark':
+            input_file = input('Main File: ')
+            watermark_file = input('Watermark File (pdf): ')
+            pages = input('Pages on which Watermark to be applied (default: ALL): ')
+            pages = pages.split(',')
+            print(funcs.watermark(watermark_file, input_file, output_file, pages))
+
+        elif option == 'convert_images_to_pdf':
+            images = input('Name of images (space seperated values):').split(' ')
+            print(funcs.convert_images_to_pdf(images, output_file))
+
+        exit()
+
+    if option == 'split_pdf':
+        print(funcs.split_pdf(input_file, output_file, start_page, end_page))
+    elif option == 'reduce_pdf_size':
+        print(funcs.redice_pdf_size(input_file, output_file))
+
+    elif option == 'stamp':
+        pass
+    elif option == 'watermark':
+        pass
+    elif option == 'merge_pdfs':
+        pass
+    elif option == 'convert_images_to_pdf':
+        pass
+
+
+
+
+if __name__=='__main__':
+    main()
