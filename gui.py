@@ -281,7 +281,7 @@ class window(tk.Tk):
 				list_of_files_instructions.pack(side='bottom', fill=tk.X)
 
 			case 'watermark':
-			    # Changing geometry
+				# Changing geometry
 				self.geometry('650x300')
 				# Creating frame and title
 				title = tk.Label(self, text="Watermark", font='sans-serif 20')
@@ -352,8 +352,124 @@ class window(tk.Tk):
 				indicies_instructions.pack(side='bottom', fill=tk.X)
 				frame.pack()
 
+			case "unlock_pdf":
+				frame = tk.Frame(self)
+				title = tk.Label(self, text="Unlock PDF", font="sans-serif 20")
+							
+				# Variables
+				input_pdf = tk.StringVar()
+				output_pdf = tk.StringVar()
+				password = tk.StringVar()
+				input_pdf.set('')
+				output_pdf.set('')
+				password.set('')
+							
+				# Function which works on pressing submit button
+				def unlock():
+					frame.pack_forget()
+					result = self.funcs.unlock(input_pdf.get(), output_pdf.get(), password.get())
+					lab = tk.Label(self, text=result)
+					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), go_to_homepage.pack_forget(), self.window()))
+									
+					lab.pack()
+					go_to_homepage.pack()
+
+						
+				# Entry Boxes
+				input_pdf_entry = tk.Entry(frame, textvariable=input_pdf)
+				output_pdf_entry = tk.Entry(frame, textvariable=output_pdf)
+				password_entry = tk.Entry(frame, textvariable=password)
+
+				# Labels
+				input_pdf_label = tk.Label(frame, text="Input file:")
+				output_pdf_label = tk.Label(frame, text="Output file:")
+				password_label = tk.Label(frame, text="Password:")
+
+				# Buttons
+				input_pdf_open = tk.Button(frame, text='Open File', command=lambda: (input_pdf.set(self.funcs.select_file_pdf()), ))
+
+				submit = tk.Button(frame, text="Submit", command=lambda: (frame.pack_forget(), unlock()))
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+
+				# Packing Everything
+				input_pdf_label.grid(column=1, row=1)
+				output_pdf_label.grid(column=1, row=2)
+				password_label.grid(column=1, row=3)
+							
+				input_pdf_entry.grid(column=2, row=1)
+				output_pdf_entry.grid(column=2, row=2)
+				password_entry.grid(column=2, row=3)
+							
+				input_pdf_open.grid(column=3, row=1, padx=3, pady=1)
+						
+				submit.grid(column=1, row=5)
+				back_to_homepage.grid(column=3, row=5)
+
+			
+				title.pack()
+				frame.pack()
+
+
+			case "lock_pdf":
+				frame = tk.Frame(self)
+				title = tk.Label(self, text="Lock PDF", font="sans-serif 20")
+							
+				# Variables
+				input_pdf = tk.StringVar()
+				output_pdf = tk.StringVar()
+				password = tk.StringVar()
+				input_pdf.set('')
+				output_pdf.set('')
+				password.set('')
+							
+				# Function which works on pressing submit button
+				def lock():
+					frame.pack_forget()
+					result = self.funcs.lock(input_pdf.get(), output_pdf.get(), password.get())
+					lab = tk.Label(self, text=result)
+					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), go_to_homepage.pack_forget(), self.window()))
+									
+					lab.pack()
+					go_to_homepage.pack()
+
+						
+				# Entry Boxes
+				input_pdf_entry = tk.Entry(frame, textvariable=input_pdf)
+				output_pdf_entry = tk.Entry(frame, textvariable=output_pdf)
+				password_entry = tk.Entry(frame, textvariable=password)
+
+				# Labels
+				input_pdf_label = tk.Label(frame, text="Input file:")
+				output_pdf_label = tk.Label(frame, text="Output file:")
+				password_label = tk.Label(frame, text="Password:")
+
+				# Buttons
+				input_pdf_open = tk.Button(frame, text='Open File', command=lambda: (input_pdf.set(self.funcs.select_file_pdf()), ))
+
+				submit = tk.Button(frame, text="Submit", command=lambda: (frame.pack_forget(), lock()))
+				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
+
+				# Packing Everything
+				input_pdf_label.grid(column=1, row=1)
+				output_pdf_label.grid(column=1, row=2)
+				password_label.grid(column=1, row=3)
+							
+				input_pdf_entry.grid(column=2, row=1)
+				output_pdf_entry.grid(column=2, row=2)
+				password_entry.grid(column=2, row=3)
+							
+				input_pdf_open.grid(column=3, row=1, padx=3, pady=1)
+						
+				submit.grid(column=1, row=5)
+				back_to_homepage.grid(column=3, row=5)
+
+			
+				title.pack()
+				frame.pack()
+
+
 			case "stamp":
-			    # Changing geometry
+				# Changing geometry
 				self.geometry('650x300')
 				# Creating frame and title
 				title = tk.Label(self, text="Stamp", font='sans-serif 20')

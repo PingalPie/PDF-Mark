@@ -11,7 +11,7 @@ class incorrectNoPagesException:
 class functions:
 	def __init__(self):
 		super().__init__()
-		self.__all__ = ['split_pdf', 'merge_pdfs', 'reduce_pdf_size', 'stamp', 'watermark', 'convert_images_to_pdf']
+		self.__all__ = ['split_pdf', 'merge_pdfs', 'reduce_pdf_size', 'stamp', 'watermark', 'convert_images_to_pdf', 'lock_pdf', 'unlock_pdf']
 
 	def select_file_pdf(self):
 		filetypes = (
@@ -202,6 +202,64 @@ class functions:
 		except Exception as e:
 			return e
 
+	def lock(self, input_file: Path, output_file: Path, password: str, algorithm="AES-256-R5"):
+		"""
+				Locks the pdf file given in the argument input_file
+				Args:
+					   input_file (Path): Path of the pdf file that is going to be locked
+					   output_file (Path): Path of the pdf file where the locked pdf file will be stored
+					password (str): Password to be applied on the pdf
+					   algorithm (str) [default: aes-256-r5]: encryption algorithm to be applied
+		"""
+		try:
+			if not os.path.exists(input_file):
+				raise FileNotFoundError
+			
+			reader = pypdf.PdfReader(input_file)
+			writer = pypdf.PdfWriter(output_file)
+										
+			for page in reader.pages:
+				writer.add_page(page)
+
+			writer.encrypt(password, algorithm=algorithm)
+				
+			with open(output_file, "wb") as f:
+				writer.write(f)
+
+			return "Success"
+			
+		except Exception as e:
+			return e
+
+	def unlock(self, input_file: Path, output_file: Path, password: str, algorithm="AES-256-R5"):
+		"""
+				Remove the encryption from encrypted pdf
+				Args:
+					  input_file (Path): File which has ecryption on it
+					  output_file (Path): Where to save the decrypted file
+					  password (str): password of the encryption
+					  algorithm (str) [default: aes-256-r5]: encryption algorithm to be applied
+		""" 
+		try:
+			if not os.path.exists(input_file):
+				raise FileNotFoundError
+								
+			reader = pypdf.PdfReader(input_file)
+			writer = pypdf.PdfWriter(output_file)
+								
+			if reader.is_encrypted:
+				reader.decrypt(password)
+
+			for page in reader.pages:
+				writer.add_page(page)
+
+			with open(output_file, "wb") as f:
+				writer.write(f)
+			return "Success"
+				
+		except Exception as e:
+			return e
+						
 	def watermark(self, watermark: Path, input_file: Path, output_file: Path, page_indicies: Union[Literal["ALL"], List[int]] = "ALL"):
 		"""
 		Watermark the file in the argument input_file

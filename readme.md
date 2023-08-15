@@ -3,8 +3,10 @@
 # Dependecies
 - python
 - pypdf
+- pillow
 - tkinter (optional if you use only web framework)
 - flask   (optional if you use only gui framework)
+- pycryptodome (if you want to encrypt pdfs)
 
 tkinter or flask is required to run
 
