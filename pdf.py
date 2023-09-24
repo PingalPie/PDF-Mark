@@ -11,7 +11,7 @@ class incorrectNoPagesException:
 class functions:
 	def __init__(self):
 		super().__init__()
-		self.__all__ = ['split_pdf', 'merge_pdfs', 'reduce_pdf_size', 'stamp', 'watermark', 'convert_images_to_pdf', 'lock_pdf', 'unlock_pdf']
+		self.__all__ = ['split_pdf', 'merge_pdfs', 'reduce_pdf_size', 'stamp', 'watermark', 'convert_images_to_pdf', 'lock', 'unlock']
 
 	def select_file_pdf(self):
 		filetypes = (

@@ -5,79 +5,73 @@ from pdf import *
 
 funcs = functions()
 
-@click.command()
-@click.option('--option', help="Which manipulation you want to do")
-@click.option('-i', default=False, is_flag=True)
-@click.option('--input-file', 'input_file', default="None")
-@click.option('--output-file', 'output_file', default="None")
-@click.option('--pages', default="ALL")
-@click.option('--start-page', 'start_page', default=1)
-@click.option('--end-page', 'end_page', default=1)
-@click.option('--stamp-file', 'stamp_file', default="None")
-@click.option('--watermark-file', 'watermark_file', default="None")
-def main(option, i, input_file, output_file, pages, start_page, end_page, stamp_file, watermark_file):
-    if option not in funcs.__all__:
-        print("Choose correct option from '", end="")
-        for f in funcs.__all__:
-            print(f, end=", ")
-        print("'")
-        exit(1)
+@click.group()
+def cli():
+	pass
 
-    if i:
-        output_file = input('Output File: ')
-        if option == 'split_pdf':
-            input_file = input('Input File: ')
-            start_page = input('Start Page (default: 1): ')
-            end_page = input('End Page: (default: 1) ')
-            try:
-                start_page = int(start_page)
-                end_page = int(end_page)
-            except Exception as e:
-                start_page = end_page = 1
-            print(funcs.split_pdf(input_file, output_file, start_page, end_page))
-        elif option == 'merge_pdfs':
-            pdfs = input('Pdfs to be merged (space seperated): ').split(' ')
-            print(funcs.merge_pdfs(pdfs, output_pdf))
+@cli.command("split_pdf")
+@click.option("-i", "--input-file", prompt_required=True, prompt=True, multiple=False)
+@click.option("-o", "--output-file", prompt_required=True, prompt=True, multiple=False)
+@click.option("-s", "--start-page", default=1, prompt=True, multiple=False)
+@click.option("-e", "--end-page", default=1, prompt=True, multiple=False)
+def split_pdf(input_file, output_file, start_page, end_page):
+	result = funcs.split_pdf(input_file, output_file, int(start_page), int(end_page))
+	click.echo(result)
 
-        elif option == 'reduce_pdf_size':
-            input_file = input('Input File: ')
-            print(funcs.reduce_pdf_size(input_file, output_file))
-        elif option == 'stamp':
-            input_file = input('Main File: ')
-            stamp_file = input('Stamp File (pdf): ')
-            pages = input('Pages on which stamp to be applied (default: ALL): ')
-            pages = pages.split(',')
-            print(funcs.stamp(stamp_file, input_file, output_file, pages))
+@cli.command("merge_pdfs")
+@click.option("-o", '--output-file', prompt_required=True, prompt=True, multiple=False)
+@click.option("-i", "--input-files", multiple=True)
+def merge_pdfs(output_file, input_files):
+	result = funcs.merge_pdfs(input_files, output_file)
+	click.echo(result)
 
-        elif option == 'watermark':
-            input_file = input('Main File: ')
-            watermark_file = input('Watermark File (pdf): ')
-            pages = input('Pages on which Watermark to be applied (default: ALL): ')
-            pages = pages.split(',')
-            print(funcs.watermark(watermark_file, input_file, output_file, pages))
+@cli.command("reduce_pdf_size")
+@click.option('-i', '--input-file', prompt=True, multiple=False)
+@click.option('-o', '--output-file', prompt=True, multiple=False)
+def reduce_pdf_size(input_file, output_file):
+	result = funcs.reduce_pdf_size(file=input_file, reduced_file_name=output_file)
+	click.echo(result)
 
-        elif option == 'convert_images_to_pdf':
-            images = input('Name of images (space seperated values):').split(' ')
-            print(funcs.convert_images_to_pdf(images, output_file))
+@cli.command("stamp")
+@click.option('-i', '--input-file', prompt=True, multiple=False)
+@click.option('-o', '--output-file', prompt=True, multiple=False)
+@click.option('-s', '--stamp-pdf', prompt=True, multiple=False)
+def stamp(input_file, stamp_pdf, output_file):
+	result = funcs.stamp(stamp=stamp_pdf, input_file=input_file, output_file=output_file)
+	click.echo(result)
 
-        exit()
+@cli.command("watermark")
+@click.option('-i', '--input-file', prompt=True, multiple=False)
+@click.option('-o', '--output-file', prompt=True, multiple=False)
+@click.option('-w', '--watermark-pdf', prompt=True, multiple=False)
+def watermark(input_file, watermark_pdf, output_file):
+	result = funcs.watermark(watermark=watermark_pdf, input_file=input_file, output_file=output_file)
+	click.echo(result)
 
-    if option == 'split_pdf':
-        print(funcs.split_pdf(input_file, output_file, start_page, end_page))
-    elif option == 'reduce_pdf_size':
-        print(funcs.redice_pdf_size(input_file, output_file))
+@cli.command("images_to_pdf")
+@click.option("-o", '--output-file', prompt_required=True, prompt=True, multiple=False)
+@click.option("-i", "--input-files", multiple=True)
+def images_to_pdf(output_file, input_files):
+	result = funcs.convert_images_to_pdf(list_of_images=input_file, output_path=output_file)
+	click.echo(result)
 
-    elif option == 'stamp':
-        pass
-    elif option == 'watermark':
-        pass
-    elif option == 'merge_pdfs':
-        pass
-    elif option == 'convert_images_to_pdf':
-        pass
+@cli.command("lock")
+@click.option('-i', '--input-file', prompt=True, multiple=False)
+@click.option('-o', '--output-file', prompt=True, multiple=False)
+@click.option("-p", "--password", prompt=True, hide_input=True, confirmation_prompt=True)
+def lock(input_file, output_file, password):
+	result = funcs.lock(input_file=input_file, output_file=output_file, password=password)
+	click.echo(result)
 
+@cli.command("unlock")
+@click.option('-i', '--input-file', prompt=True, multiple=False)
+@click.option('-o', '--output-file', prompt=True, multiple=False)
+@click.option("-p", "--password", prompt=True, hide_input=True, confirmation_prompt=False)
+def unlock(input_file, output_file, password):
+	result = funcs.unlock(input_file=input_file, output_file=output_file, password=password)
+	click.echo(result)
 
 
 
 if __name__=='__main__':
-    main()
+    cli()
