@@ -1,0 +1,60 @@
+#+AUTHOR: PingalPie
+#+Date: 2023-09-24
+
+The goat pdf manipulator
+
+
+* Dependencies
+- Python3.11
+- PyPDF
+- PILLOW
+- TKinter ( for gui framework )
+- Flask ( for web framework )
+- Click ( for cli framework )
+- pycryptodome ( for encrypting/decrypting pdf files )
+
+* Usage
+There are multiple ways to use this program.
+
+** GUI
+Graphical user interface for nerds.
+
+#+begin_src bash
+python3.11 gui.py
+#+end_src
+
+** Web
+Web interface if you want to self-host.
+
+#+begin_src bash
+python3.11 web.py
+#+end_src
+
+** CLI (Command Line Interface)
+Command line interface if you want speed and portability and knows how to use terminal.
+
+#+begin_src bash
+python3.11 cli.py
+#+end_src
+
+* Files/Folders used
+** main.py
+Empty file
+
+** pdf.py
+Contains all pdf manipulative functions.
+
+** gui.py
+GUI or Graphical User Interface implementation
+
+** cli.py
+CLI or Command Line Interface implementation
+
+** web.py
+Web implementation
+
+** templates - folder
+HTML files required for web framework.
+
+** static - folder
+Data files required for web framework.
