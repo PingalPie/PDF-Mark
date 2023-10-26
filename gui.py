@@ -1,3 +1,21 @@
+"""
+    This is a tool which can be used to do many operations on pdf files.
+    Copyright (C) 2023  PingalPie
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 import tkinter as tk
 from pdf import functions
 from tkinter import filedialog as fd
@@ -10,12 +28,61 @@ class window(tk.Tk):
 		self.title('Pdf Manipulator')
 		self.funcs = functions()
 
+		# MENU BAR
+		self.menu = tk.Menu(self)
+		self.config(menu=self.menu)
+
+		home = tk.Menu(self.menu, tearoff=0)
+		self.menu.add_cascade(label="Home", menu=home)
+		home.add_command(label="HomePage", command=lambda: (self.frame.pack_forget(), self.window()))
+		home.add_command(label="About", command=lambda: (self.frame.pack_forget(), self.about()))
+		home.add_command(label="Help", command=lambda: (self.frame.pack_forget(), self.help()))
+
+
+	def about(self):
+		self.frame = tk.Frame(self)
+		title = tk.Label(self.frame, text="ABOUT PAGE", font="sans-serif 30")
+
+		copyright = tk.Label(
+			self.frame,
+			text="""This is a tool which can be used to do many operations on pdf files.
+    Copyright (C) 2023  PingalPie
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+""")
+		info = tk.Label(self.frame, text="This software is made by PingalPie (https://github.com/PingalPie)")
+
+		title.pack()
+		copyright.pack()
+		info.pack()
+		self.frame.pack()
+
+	def help(self):
+		self.frame = tk.Frame(self)
+		title = tk.Label(self.frame, text="Feedback page", font="sans-serif 30")
+		content = tk.Label(self.frame, text="If you encountered any error please report it to https://github.com/pingalpie/pdf-manipulator")
+
+		title.pack()
+		content.pack()
+		self.frame.pack()
+
 	def window(self):
 		"""
 
 		"""
-		self.frame1 = tk.Frame(self)
-		labelf = tk.Label(self.frame1, text='Options: ')
+		self.frame = tk.Frame(self)
+		labelf = tk.Label(self.frame, text='Options: ')
 		option = tk.StringVar()
 		option.set("Choose one option")
 		options_all = self.funcs.__all__
@@ -29,14 +96,14 @@ class window(tk.Tk):
 		for i in options_all:
 			options.append(i.replace('_', ' '))
 
-		option_menu = tk.OptionMenu(self.frame1, option, *options)
+		option_menu = tk.OptionMenu(self.frame, option, *options)
 
-		submit = tk.Button(self.frame1, text="Submit", command=select_answers)
+		submit = tk.Button(self.frame, text="Submit", command=select_answers)
 
 		labelf.grid(column=1, row=1)
 		option_menu.grid(column=2, row=1)
 		submit.grid(column=1, row=2)
-		self.frame1.pack()
+		self.frame.pack()
 
 	def options(self, selected_option: str):
 		"""
@@ -49,7 +116,7 @@ class window(tk.Tk):
 				# Creating required labels and frames
 				title = tk.Label(self, text='Split Pdf', font='monospace 20')
 				title.pack()
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				# Creating variables for entryboxes
 				input_path = tk.StringVar()
@@ -64,13 +131,13 @@ class window(tk.Tk):
 				# Actual function which will do the task
 				def split_pdfs(input_path, output_path, start_page, end_page):
 					result = self.funcs.split_pdf(str(input_path), str(output_path), int(start_page), int(end_page))
-					frame.pack_forget()
-					frame2 = tk.Frame(self)
+					self.frame.pack_forget()
+					self.frame2 = tk.Frame(self)
 					label12 = tk.Label(frame2, text=result)
 					label12.pack()
 					back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
 					back_to_home.pack()
-					frame2.pack()
+					self.frame2.pack()
 
 				# Creating entry boxes
 				input_path_box = tk.Entry(frame, textvariable=input_path)
@@ -109,13 +176,13 @@ class window(tk.Tk):
 
 				back_to_homepage.grid(column=3, row=5, pady=10)
 
-				frame.pack()
+				self.frame.pack()
 
 			case 'reduce_pdf_size':
 				# Creating required labels and frames
 				title = tk.Label(self, text="Reduce file size of a pdf", font='Sans-Serif 20')
 				title.pack()
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				# Creating variables for entryboxes
 				input_path = tk.StringVar()
@@ -126,8 +193,8 @@ class window(tk.Tk):
 				# Actual function which will do the task
 				def reduce_file_size(file, out_file):
 					result = self.funcs.reduce_pdf_size(file, out_file)
-					frame.pack_forget()
-					frame2 = tk.Frame(self)
+					self.frame.pack_forget()
+					self.frame2 = tk.Frame(self)
 					label12 = tk.Label(frame2, text=result, font='sans-serif 15')
 					label12.pack()
 					back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (title.pack_forget(), frame2.pack_forget(), self.window()))
@@ -162,13 +229,13 @@ class window(tk.Tk):
 
 				back_to_homepage.grid(column=3, row=5, pady=10)
 
-				frame.pack()
+				self.frame.pack()
 
 			case 'merge_pdfs':
 				# Creating required labels and frames
 				title = tk.Label(self, text="Merge Pdfs", font='Sans-Serif 20')
 				instructions = tk.Label(self, text='Have values in the entry box of list of files comma seperated', relief=tk.SUNKEN, anchor='s')
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				# Creating variables for entryboxes
 				files = tk.StringVar()
@@ -180,13 +247,13 @@ class window(tk.Tk):
 				def merge_pdfs(output_file):
 					list_of_files = files.get().split(',')
 					result = self.funcs.merge_pdfs(list_of_files, output_file)
-					frame.pack_forget()
-					frame2 = tk.Frame(self)
+					self.frame.pack_forget()
+					self.frame2 = tk.Frame(self)
 					label12 = tk.Label(frame2, text=result, font='sans-serif 15')
 					label12.pack()
 					back_to_home = tk.Button(frame2, text='Back to HomePage', command=lambda: (instructions.pack_forget(), title.pack_forget(), frame2.pack_forget(), self.window()))
 					back_to_home.pack()
-					frame2.pack()
+					self.frame2.pack()
 
 				# Creating entry boxes
 				files_box = tk.Entry(frame, textvariable=files)
@@ -220,14 +287,15 @@ class window(tk.Tk):
 
 				title.pack()
 				instructions.pack(side='bottom', fill=tk.X)
-				frame.pack()
+
+				self.frame.pack()
 
 			case 'convert_images_to_pdf':
 
 				# Creating required labels and frames
 				title = tk.Label(self, text='convert_images_to_pdf', font='Sans-Serif 20')
 				list_of_files_instructions = tk.Label(self, text='Have values in the entry box of list of files comma seperated', relief=tk.SUNKEN, anchor='s')
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				# Creating variables for entryboxes
 				list_of_file = tk.StringVar()
@@ -238,7 +306,7 @@ class window(tk.Tk):
 				# Actual function which will do the task
 				def convert_images_to_pdf(list_of_images: list, output_pdf: str):
 					list_of_files_instructions.pack_forget()
-					frame.pack_forget()
+					self.frame.pack_forget()
 					result = self.funcs.convert_images_to_pdf(list_of_images, output_pdf)
 					lab = tk.Label(self, text=result)
 					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), self.window()))
@@ -276,7 +344,7 @@ class window(tk.Tk):
 
 				title.pack()
 
-				frame.pack()
+				self.frame.pack()
 
 				list_of_files_instructions.pack(side='bottom', fill=tk.X)
 
@@ -286,7 +354,7 @@ class window(tk.Tk):
 				# Creating frame and title
 				title = tk.Label(self, text="Watermark", font='sans-serif 20')
 				indicies_instructions = tk.Label(self, text="Page numbers should be written in comma seperated values, default: all")
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				# Creating variables
 				content_pdf = tk.StringVar()
@@ -299,7 +367,7 @@ class window(tk.Tk):
 
 				# Function which works on pressing submit button
 				def watermark():
-					frame.pack_forget()
+					self.frame.pack_forget()
 					indicies_instructions.pack_forget()
 					result = self.funcs.watermark(watermark_file.get(), content_pdf.get(), output_pdf.get(), page_indicies.get().split(','))
 					print(result)
@@ -314,7 +382,7 @@ class window(tk.Tk):
 				content_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
 				watermark_entry = tk.Entry(frame, textvariable=watermark_file)
 				page_indices_entry = tk.Entry(frame, textvariable=page_indicies)
-				
+
 				# Making Labels
 				output_pdf_label = tk.Label(frame, text="Output file:")
 				content_pdf_label = tk.Label(frame, text='Main pdf:')
@@ -343,19 +411,20 @@ class window(tk.Tk):
 				content_pdf_open.grid(column=3, row=1, padx=3, pady=1)
 				watermark_open.grid(column=3, row=2, padx=3, pady=1)
 				output_pdf_open.grid(column=3, row=3, padx=3, pady=1)
-	
+
 				submit.grid(column=1, row=5)
 				back_to_homepage.grid(column=3, row=5)
 
-			
+
 				title.pack()
 				indicies_instructions.pack(side='bottom', fill=tk.X)
-				frame.pack()
+
+				self.frame.pack()
 
 			case "unlock_pdf":
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 				title = tk.Label(self, text="Unlock PDF", font="sans-serif 20")
-							
+
 				# Variables
 				input_pdf = tk.StringVar()
 				output_pdf = tk.StringVar()
@@ -363,18 +432,18 @@ class window(tk.Tk):
 				input_pdf.set('')
 				output_pdf.set('')
 				password.set('')
-							
+
 				# Function which works on pressing submit button
 				def unlock():
-					frame.pack_forget()
+					self.frame.pack_forget()
 					result = self.funcs.unlock(input_pdf.get(), output_pdf.get(), password.get())
 					lab = tk.Label(self, text=result)
 					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), go_to_homepage.pack_forget(), self.window()))
-									
+
 					lab.pack()
 					go_to_homepage.pack()
 
-						
+
 				# Entry Boxes
 				input_pdf_entry = tk.Entry(frame, textvariable=input_pdf)
 				output_pdf_entry = tk.Entry(frame, textvariable=output_pdf)
@@ -395,25 +464,25 @@ class window(tk.Tk):
 				input_pdf_label.grid(column=1, row=1)
 				output_pdf_label.grid(column=1, row=2)
 				password_label.grid(column=1, row=3)
-							
+
 				input_pdf_entry.grid(column=2, row=1)
 				output_pdf_entry.grid(column=2, row=2)
 				password_entry.grid(column=2, row=3)
-							
+
 				input_pdf_open.grid(column=3, row=1, padx=3, pady=1)
-						
+
 				submit.grid(column=1, row=5)
 				back_to_homepage.grid(column=3, row=5)
 
-			
+
 				title.pack()
-				frame.pack()
+				self.frame.pack()
 
 
 			case "lock_pdf":
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 				title = tk.Label(self, text="Lock PDF", font="sans-serif 20")
-							
+
 				# Variables
 				input_pdf = tk.StringVar()
 				output_pdf = tk.StringVar()
@@ -421,18 +490,18 @@ class window(tk.Tk):
 				input_pdf.set('')
 				output_pdf.set('')
 				password.set('')
-							
+
 				# Function which works on pressing submit button
 				def lock():
-					frame.pack_forget()
+					self.frame.pack_forget()
 					result = self.funcs.lock(input_pdf.get(), output_pdf.get(), password.get())
 					lab = tk.Label(self, text=result)
 					go_to_homepage = tk.Button(self, text='Back to homepage', command=lambda: (lab.pack_forget(), title.pack_forget(), go_to_homepage.pack_forget(), self.window()))
-									
+
 					lab.pack()
 					go_to_homepage.pack()
 
-						
+
 				# Entry Boxes
 				input_pdf_entry = tk.Entry(frame, textvariable=input_pdf)
 				output_pdf_entry = tk.Entry(frame, textvariable=output_pdf)
@@ -453,19 +522,19 @@ class window(tk.Tk):
 				input_pdf_label.grid(column=1, row=1)
 				output_pdf_label.grid(column=1, row=2)
 				password_label.grid(column=1, row=3)
-							
+
 				input_pdf_entry.grid(column=2, row=1)
 				output_pdf_entry.grid(column=2, row=2)
 				password_entry.grid(column=2, row=3)
-							
+
 				input_pdf_open.grid(column=3, row=1, padx=3, pady=1)
-						
+
 				submit.grid(column=1, row=5)
 				back_to_homepage.grid(column=3, row=5)
 
-			
 				title.pack()
-				frame.pack()
+
+				self.frame.pack()
 
 
 			case "stamp":
@@ -474,7 +543,7 @@ class window(tk.Tk):
 				# Creating frame and title
 				title = tk.Label(self, text="Stamp", font='sans-serif 20')
 				indicies_instructions = tk.Label(self, text="Page numbers should be written in comma seperated values, default: all")
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				# Creating variables
 				content_pdf = tk.StringVar()
@@ -487,7 +556,7 @@ class window(tk.Tk):
 
 				# Function which works on pressing submit button
 				def stamp():
-					frame.pack_forget()
+					self.frame.pack_forget()
 					indicies_instructions.pack_forget()
 					result = self.funcs.stamp(stamp_file.get(), content_pdf.get(), output_pdf.get(), page_indicies.get().split(','))
 					lab = tk.Label(self, text=result)
@@ -501,7 +570,7 @@ class window(tk.Tk):
 				content_pdf_entry = tk.Entry(frame, textvariable=content_pdf)
 				stamp_entry = tk.Entry(frame, textvariable=stamp_file)
 				page_indices_entry = tk.Entry(frame, textvariable=page_indicies)
-				
+
 				# Making Labels
 				output_pdf_label = tk.Label(frame, text="Output file:")
 				content_pdf_label = tk.Label(frame, text='Main pdf:')
@@ -530,24 +599,24 @@ class window(tk.Tk):
 				content_pdf_open.grid(column=3, row=1, padx=3, pady=1)
 				stamp_open.grid(column=3, row=2, padx=3, pady=1)
 				output_pdf_open.grid(column=3, row=3, padx=3, pady=1)
-	
+
 				submit.grid(column=1, row=5)
 				back_to_homepage.grid(column=3, row=5)
 
-			
+
 				title.pack()
 				indicies_instructions.pack(side='bottom', fill=tk.X)
-				frame.pack()
+				self.frame.pack()
 
-				
+
 			case _:
 				title = tk.Label(self, text='Choose correct option.')
-				frame = tk.Frame(self)
+				self.frame = tk.Frame(self)
 
 				back_to_homepage = tk.Button(frame, text='Back to HomePage', command=lambda: (title.pack_forget(), frame.pack_forget(), self.window()))
 
 				back_to_homepage.pack()
-				frame.pack()
+				self.frame.pack()
 				title.pack()
 
 

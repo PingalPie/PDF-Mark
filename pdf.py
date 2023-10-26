@@ -1,3 +1,21 @@
+"""
+    This is a tool which can be used to do many operations on pdf files.
+    Copyright (C) 2023  PingalPie
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 import pypdf
 import os
 from pathlib import Path
@@ -214,20 +232,20 @@ class functions:
 		try:
 			if not os.path.exists(input_file):
 				raise FileNotFoundError
-			
+
 			reader = pypdf.PdfReader(input_file)
 			writer = pypdf.PdfWriter(output_file)
-										
+
 			for page in reader.pages:
 				writer.add_page(page)
 
 			writer.encrypt(password, algorithm=algorithm)
-				
+
 			with open(output_file, "wb") as f:
 				writer.write(f)
 
 			return "Success"
-			
+
 		except Exception as e:
 			return e
 
@@ -239,14 +257,14 @@ class functions:
 					  output_file (Path): Where to save the decrypted file
 					  password (str): password of the encryption
 					  algorithm (str) [default: aes-256-r5]: encryption algorithm to be applied
-		""" 
+		"""
 		try:
 			if not os.path.exists(input_file):
 				raise FileNotFoundError
-								
+
 			reader = pypdf.PdfReader(input_file)
 			writer = pypdf.PdfWriter(output_file)
-								
+
 			if reader.is_encrypted:
 				reader.decrypt(password)
 
@@ -256,10 +274,10 @@ class functions:
 			with open(output_file, "wb") as f:
 				writer.write(f)
 			return "Success"
-				
+
 		except Exception as e:
 			return e
-						
+
 	def watermark(self, watermark: Path, input_file: Path, output_file: Path, page_indicies: Union[Literal["ALL"], List[int]] = "ALL"):
 		"""
 		Watermark the file in the argument input_file

@@ -1,3 +1,21 @@
+"""
+    This is a tool which can be used to do many operations on pdf files.
+    Copyright (C) 2023  PingalPie
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+"""
+
 from flask import Flask, redirect, url_for, request, render_template
 from pdf import functions
 import os
@@ -14,11 +32,11 @@ def index():
         if not function.startswith('__') and not function=='select_file':
             options.append(function)
     return render_template('index.html', title="Welcome to PDF Manipulator", options=options)
-    
+
 @app.route('/manipulations')
 def manuplations():
     option = request.args.get('option')
-    return redirect(url_for(option))    
+    return redirect(url_for(option))
 
 @app.route('/split_pdf', methods=['GET', 'POST'])
 def split_pdf():
@@ -46,7 +64,7 @@ def reduce_pdf_size():
     if request.method == 'POST':
         file = request.files['file']
         out_file = f'static/pdfs/reduced_size_{file.filename}'
-        
+
         file.save(f'static/pdfs/{file.filename}')
 
         result = funcs.reduce_pdf_size(f'static/pdfs/{file.filename}', out_file)
