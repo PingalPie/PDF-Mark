@@ -23,14 +23,10 @@ import os
 app = Flask(__name__)
 funcs = functions()
 
-options = []
+options = funcs.__all__
 
 @app.route('/')
 def index():
-    global options
-    for function in dir(functions):
-        if not function.startswith('__') and not function=='select_file':
-            options.append(function)
     return render_template('index.html', title="Welcome to PDF Manipulator", options=options)
 
 @app.route('/manipulations')
@@ -59,15 +55,15 @@ def split_pdf():
         return render_template('split_pdf.html', title="Split PDF", error=result)
     return render_template('split_pdf.html', title="Split PDF")
 
-@app.route('/reduce_pdf_size', methods=['GET', 'POST'])
-def reduce_pdf_size():
+@app.route('/compress', methods=['GET', 'POST'])
+def compress():
     if request.method == 'POST':
         file = request.files['file']
         out_file = f'static/pdfs/reduced_size_{file.filename}'
 
         file.save(f'static/pdfs/{file.filename}')
 
-        result = funcs.reduce_pdf_size(f'static/pdfs/{file.filename}', out_file)
+        result = funcs.compress(f'static/pdfs/{file.filename}', out_file)
 
         if result == 'Success':
             return render_template('reduce_pdf_size.html', title="Reduce PDF size", out_file=out_file)
@@ -93,14 +89,57 @@ def merge_pdfs():
         return render_template('merge_pdfs.html', error=result)
     return render_template('merge_pdfs.html', title="Merge PDFS")
 
+@app.route('/stamp')
+def stamp():
+     if request.method == 'POST':
+          mainFile = request.files['mainFile']
+          stampFile = request.files['stamp_file']
+
+          l = mainFile.split('.')
+          l.pop()
+          out_file = ''.join(l) + '_stamped.pdf'
+
+          del l
+          result = funcs.stamp(stamp=stampFile, input_file=mainFile, output_file=out_file)
+          os.rename(out_file, f'static/pdfs/{out_file}')
+          # TODO: add feature for pages to stamp
+
+          if result == 'Success':
+                return render_template('stamp.html', out_file=f'static/pdfs/{out_file}')
+          return render_template('stamp.html', error=result)
+     return render_template('stamp.html', title="stamp pdf")
+
+@app.route('/watermark')
+def watermark():
+     if request.method == 'POST':
+          mainFile = request.files['mainFile']
+          watermark = request.files['watermark']
+
+          l = mainFile.split('.')
+          l.pop()
+          out_file = ''.join(l) + '_watermark.pdf'
+
+          del l
+          result = funcs.watermark(watermark=stampFile, input_file=mainFile, output_file=out_file)
+          os.rename(out_file, f'static/pdfs/{out_file}')
+          # TODO: add feature for selecting pages to watermark
+
+          if result == 'Success':
+                return render_template('watermark.html', out_file=f'static/pdfs/{out_file}')
+          return render_template('watermark.html', error=result)
+     return render_template('watermark.html', title="watermark pdf")
+
+@app.route('/lock')
+def lock():
+     return render_template('lock.html')
+
+@app.route('/unlock')
+def unlock():
+     return render_template('unlock.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
 
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

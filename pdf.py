@@ -319,27 +319,27 @@ class functions:
 		except Exception as e:
 			return e
 
-    def export_to_doc(self, input_file: Path, output_file: Path):
-		"""
-		exports the input pdf file to docx document file.
-
-		Args:
-			input_file (Path): Path of the input file that is going to have the watermark.
-			output_file (Path): Path of the pdf where the pdf will stored.
-		"""
-		try:
-			if not os.path.exists(input_file):
-				raise FileNotFoundError
-			
-			reader = pypdf.PdfReader(input_file)
-
-			with open(output_file, "w") as f:
-				for page in reader.pages:
-					f.write(page)
-
-			return "Success"
-		except Exception as e:
-			return e
+  #   def export_to_doc(self, input_file: Path, output_file: Path):
+		# """
+		# exports the input pdf file to docx document file.
+		#
+		# Args:
+		# 	input_file (Path): Path of the input file that is going to have the watermark.
+		# 	output_file (Path): Path of the pdf where the pdf will stored.
+		# """
+		# try:
+		# 	if not os.path.exists(input_file):
+		# 		raise FileNotFoundError
+		# 	
+		# 	reader = pypdf.PdfReader(input_file)
+		#
+		# 	with open(output_file, "w") as f:
+		# 		for page in reader.pages:
+		# 			f.write(page)
+		#
+		# 	return "Success"
+		# except Exception as e:
+		# 	return e
 
 if __name__=='__main__':
 	funcs = functions()

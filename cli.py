@@ -46,7 +46,7 @@ def merge_pdfs(output_file, input_files):
 @click.option('-i', '--input-file', prompt=True, multiple=False)
 @click.option('-o', '--output-file', prompt=True, multiple=False)
 def reduce_pdf_size(input_file, output_file):
-	result = funcs.reduce_pdf_size(file=input_file, reduced_file_name=output_file)
+	result = funcs.compress(file=input_file, reduced_file_name=output_file)
 	click.echo(result)
 
 @cli.command("stamp")

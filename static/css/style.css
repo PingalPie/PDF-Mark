@@ -2,6 +2,10 @@
     font-family: "Kingthings Foundation";
     src: url(../fonts/Kingthings-Foundation.ttf);
 }
+@font-face {
+  font-family: Mooli;
+  src: url(../fonts/Mooli.ttf);
+}
 object{
     width: 100%;
 }
@@ -56,4 +60,7 @@ nav a{
     aside {
         display: none;
     }
+}
+p, a{
+  font-family: Mooli;
 }

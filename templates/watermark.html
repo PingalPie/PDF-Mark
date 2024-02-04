@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block content %}
+
+<h1>Watermark Pdf</h1>
+<form action="/watermark" method="post" enctype="multipart/form-data" class="form">
+    <label for="watermark_file">Select a file to be used in watermark(must be pdf): </label>
+    <input type="file" id="watermark_file" required name="file"/><br><br>
+    
+    <label for="mainFile">Select file on which watermark to be applied: </label>
+    <input type="file" name="mainFile" required id="mainFile"><br><br>
+    
+    <input type="submit" placeholder="Submit">
+</form>
+
+{% if out_file %}
+    <!-- <button type="button" onclick="{{ out_file }}">Download Splitted pdf</button> -->
+    <!-- <a href="{{ out_file }}">Download Splitted pdf</a> -->
+    <object data="{{ out_file }}"></object>
+{% elif error %}
+    <p>Please report this  {{ error }}  error to <a href="https://github.com/pingalpie/pdf-manipulator">Issues</a> </p>
+{% endif %}
+
+
+{% endblock %}
